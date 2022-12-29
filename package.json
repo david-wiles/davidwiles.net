@@ -1,0 +1,27 @@
+{
+  "name": "davidwiles.net",
+  "version": "0.0.1",
+  "description": "David Wiles' blog",
+  "main": "index.js",
+  "author": "David Wiles <me@davidwiles.net>",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf www",
+    "build:html": "./build-html.sh",
+    "build:scss": "node-sass scss/ -o www/static/css/",
+    "watch:scss": "yarn run build:scss && node-sass -w scss/ -o www/static/css/",
+    "build:js": "webpack --mode=production",
+    "watch:js": "webpack --watch --mode=development",
+    "build:dev": "cp -R assets/ www/ && yarn run build:html && yarn run build:scss && webpack --mode=development",
+    "build:prod": "rm -rf www && cp -R assets/ www/ && yarn run build:html && yarn run build:scss && yarn run build:js && node inline.js www",
+    "serve": "http-server www"
+  },
+  "dependencies": {
+    "node-sass": "^4.14.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
+}
