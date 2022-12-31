@@ -1,5 +1,16 @@
 #!/bin/bash
 
-# Use tmpl on each html file to build
-# Something like this should be used for each html file:
-tmpl -of www/index.html -vf html/index.vars html/index.html
+# Read html directory recursive, filter .html files
+for p in $(find html -name '*.html' -not -path 'html/templates/*'); do
+  OUTFILE="www/${p#html/}";
+  VARFILE="$(dirname $p)/$(basename $p .html).vars"
+
+  mkdir -p $(dirname "${OUTFILE}")
+
+  # Call tmpl for each file and its associated varfile
+  if [ -f "${VARFILE}" ]; then
+    tmpl -of ${OUTFILE} -vf ${VARFILE} $p;
+  else
+    tmpl -of ${OUTFILE} $p;
+  fi
+done

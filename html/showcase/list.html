@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {{template "../templates/resource.html"}}
+</head>
+<body>
+{{template "../templates/header.html"}}
+
+<main class="main-content list">
+  <ul class="no-bullet">
+    <!-- classic-asteroids.html -->
+    <li class="v-space">
+      <div>
+        <h3 class="no-margin">
+          <a href='{{ "classic-asteroids.link" }}' class="black">{{ "classic-asteroids.title" }}</a>
+        </h3>
+        <small>
+          {{ "classic-asteroids.updated" }}
+        </small>
+      </div>
+    </li>
+
+  </ul>
+</main>
+
+{{template "../templates/footer.html"}}
+<script src="/static/js/index.js"></script>
+</body>
+</html>

@@ -4,7 +4,10 @@ let originalBgColor;
 
 document.addEventListener('DOMContentLoaded', () => {
   originalBgColor = document.body.style.backgroundColor;
-  if (localStorage.getItem("theme") === 'dark') {
+
+  // TODO use CSS queries instead of JS
+  let prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  if (localStorage.getItem("theme") !== 'light' && prefersDark) {
     toggleTheme();
   }
 

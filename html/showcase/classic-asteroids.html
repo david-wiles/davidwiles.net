@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {{template "../templates/resource.html"}}
+</head>
+<body>
+{{template "../templates/header.html"}}
+
+<main class="main-content article">
+  <h1>{{ "title" }}</h1>
+
+  <p>One of first hits of the arcade era was Atari’s Asteroids, and it is still one of the most well known games of all
+    time. For this reason, I’ve decided to remake it in a web-based version.</p>
+
+  <p>You can play the game <a href="/asteroids.html">here</a>. The arrow keys control the spaceship, <code>f</code> to shoot and <code>s</code>
+    for shield.</p>
+
+  <p>You can find the source code on github here: <a target="_blank" href="https://github.com/david-wiles/asteroids-ts">https://github.com/david-wiles/asteroids-ts</a>.
+  </p>
+
+</main>
+
+{{template "../templates/footer.html"}}
+<script src="/static/js/index.js"></script>
+</body>
+</html>
