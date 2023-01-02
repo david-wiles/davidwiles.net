@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {{template "../templates/resource.html"}}
+</head>
+<body>
+{{template "../templates/header.html"}}
+
+<main class="main-content list">
+  <ul class="no-bullet">
+    <!-- 10k-websockets.html -->
+    <li class="v-space">
+      <div>
+        <h3 class="no-margin">
+          <a href='{{ "10k-websockets.link" }}' class="black">{{ "10k-websockets.title" }}</a>
+        </h3>
+        <small>
+          {{ "10k-websockets.updated" }}
+        </small>
+      </div>
+    </li>
+  </ul>
+</main>
+
+{{template "../templates/footer.html"}}
+<script src="/static/js/index.js"></script>
+</body>
+</html>
