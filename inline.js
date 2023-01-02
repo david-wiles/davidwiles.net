@@ -11,6 +11,9 @@ const path = require("path");
 // Cache of files so we don't have to read a file more than once
 let cache = {};
 
+// Global base directory
+const base = path.resolve(process.cwd(), process.argv[2]);
+
 /**
  * Get a list of links in a given html string.
  * link: {
@@ -24,7 +27,7 @@ let cache = {};
 const findLinks = (html) => {
   let links = [];
 
-  let scripts = html.matchAll(/<script\s+(defer){0}\s*src="([a-zA-Z0-9-\/]+\.js)"\s*(defer){0}\s*><\/script>/gm);
+  let scripts = html.matchAll(/<script\s+(defer){0}\s*src="([.a-zA-Z0-9-\/]+\.js)"\s*(defer){0}\s*><\/script>/gm);
   let result = scripts.next();
 
   while (!result.done) {
@@ -36,7 +39,7 @@ const findLinks = (html) => {
     result = scripts.next();
   }
 
-  let stylesheets = html.matchAll(/<link\s+rel="stylesheet"\s+href="([a-zA-Z0-9-\/]+\.css)"\s*\/>/gm);
+  let stylesheets = html.matchAll(/<link\s+rel="stylesheet"\s+href="([.a-zA-Z0-9-\/]+\.css)"\s*\/>/gm);
   result = stylesheets.next();
 
   while (!result.done) {
@@ -53,21 +56,20 @@ const findLinks = (html) => {
 
 /**
  * Replaces the script and link tags in an html file with the link's text
- * @param dir
  * @param file
  * @returns {Promise<void>}
  */
-const replaceText = (dir, file) => {
+const replaceText = (file) => {
   let html = fs.readFileSync(file).toString();
   let links = findLinks(html);
   console.log("\x1b[32m", "Inlining css and js for " + file, "\x1b[0m")
   links.forEach((link) => {
     if (cache[link.file] === undefined) {
       cache[link.file] = link.type === "js" ?
-        "<script>" + fs.readFileSync(dir + link.file).toString() + "</script>" :
-        "<style>" + fs.readFileSync(dir + link.file).toString() + "</style>";
+        "<script>" + fs.readFileSync(base + link.file).toString() + "</script>" :
+        "<style>" + fs.readFileSync(base + link.file).toString() + "</style>";
     }
-    html = html.replace(link.tag, cache[link.file]);
+    html = html.replace(link.tag, function () { return cache[link.file]; });
   });
   fs.writeFileSync(file, html);
 };
@@ -82,13 +84,13 @@ const modifyFiles = (dir) => {
     } else {
       let fileInfo = path.parse(filename);
       if (fileInfo.ext === ".html") {
-        replaceText(directory, filename);
+        replaceText(filename);
       }
     }
   });
 };
 
 (() => {
-  modifyFiles(process.argv[2]);
+  modifyFiles(base);
   console.log("Finished inlining css and js files");
 })();
