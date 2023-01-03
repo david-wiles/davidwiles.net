@@ -455,6 +455,12 @@ ul.no-bullet li {
     margin-top: 10px;
     margin-left: 10px;
     background-color: yellow; }
+  .main-content code.inline {
+    font-size: 14px;
+    padding: 2px 5px;
+    background-color: #f0f0f0; }
+    .main-content code.inline.dark {
+      background-color: #0f0f0f; }
 
 /* Colors */
 /* Fonts */
@@ -574,23 +580,23 @@ hr {
     This website was created without the use of a static site generator or other tools that work "out-of-the-box". This
     is partly due to my desire to create something new, but mostly because I didn't want to learn a new framework just
     to create a website. I wanted to create a website that was <strong>fast</strong>, <strong>cheap</strong>,
-    and<strong>easy to maintain</strong>. I use <code>yarn</code> for project management and <code>webpack</code> to
+    and<strong>easy to maintain</strong>. I use <code class="inline">yarn</code> for project management and <code class="inline">webpack</code> to
     process JavaScript to make maintenance and reproducibility a bit simpler.
   </p>
 
   <p>
-    This website is just HTML, which makes it as fast as possible given the circumstances. My <a href="/index.html">index.html</a>load
-    a total of 80.48kB over 4 requests (the html, the fonts, and the favicon). If you already have the fonts and favicon
-    cached by your browser, the page load will be 4.39kB! I limit the number of requests per page load as much as
-    possible by inlining all JS and CSS, which I talk about later.
+    This website is just HTML, which makes it as fast as possible given the circumstances. My <a
+    href="/index.html"><span>index.html</span></a> loads a total of 80.48kB over 4 requests (the html, the fonts, and
+    the favicon). If you already have the fonts and favicon cached by your browser, the page load will be 4.39kB! I
+    limit the number of requests per page load as much as possible by inlining all JS and CSS, which I talk about later.
   </p>
 
   <p>
     I host <strong>everything</strong> on my site from my site, no CDN's used at all. This does make it a bit slower
-    since it is all hosted from a free static site on<a href="https://render.com">Render</a>, but this does ensure
+    since it is all hosted from a free static site on <a href="https://render.com">Render</a>, but this does ensure
     complete privacy for you. Loading <a href="/index.html">index.html</a> for me with a private window in Firefox takes
-    about 1.33s: 810ms for <code>DOMContentLoaded</code> to fire, and ~0.5s to load the fonts and favicon. A cached page
-    load will be 419ms: 107ms for <code>DOMContentLoaded</code> and ~300ms for the rest. Not crazy, but not bad for a
+    about 1.33s: 810ms for <code class="inline">DOMContentLoaded</code> to fire, and ~0.5s to load the fonts and favicon. A cached page
+    load will be 419ms: 107ms for <code class="inline">DOMContentLoaded</code> and ~300ms for the rest. Not crazy, but not bad for a
     website hosted for free.
   </p>
 
@@ -634,7 +640,7 @@ hr {
   <p>
     These features are just enough to minimize duplicated code while still making it as easy as writing pure HTML. You
     can find the source code for the project at <a href="https://github.com/david-wiles/templater">github.com/david-wiles/templater</a>.
-    I currently use this template engine with a short bash script that walks through the <code>html</code> directory and
+    I currently use this template engine with a short bash script that walks through the <code class="inline">html</code> directory and
     builds the HTML files.
   </p>
 
@@ -653,7 +659,7 @@ hr {
   </h2>
 
   <p>
-    <code>node-sass</code> is easily the most heavyweight dependency of this project, but I do think that it is
+    <code class="inline">node-sass</code> is easily the most heavyweight dependency of this project, but I do think that it is
     necessary if only for the benefit of maintainability. This adds variables, macros, modules, and selector nesting to
     CSS. Making a change to a nested selector in CSS is a nightmare, but in SCSS it can be a single-line change.
     Although there is talk of updating the CSS standard, SCSS probably won't be going away due to the way that <a
@@ -668,7 +674,7 @@ hr {
     CSS and JS inlining is somewhat of a "secret sauce" to get sites to load faster. Replacing &lt;link&gt; and &lt;script&gt;tags
     with the actual source for those links prevents the browser from needing to make extra HTTP requests and lets the
     browser's parser continue through the page without needing to stop. It is relatively easy to add this to a project,
-    too. I have a script, inline.js, in my project which does this in a separate step during my <code>yarn run
+    too. I have a script, inline.js, in my project which does this in a separate step during my <code class="inline">yarn run
     build:prod</code>compilation.
   </p>
 
@@ -676,7 +682,7 @@ hr {
     First, the script reads the given directory's files:
   </p>
 
-  <pre><code class="language-js">
+  <pre><code class="language-js multiline">
 let files = fs.readdirSync(dir);
 files.forEach((file) => { })
   </code></pre>
@@ -687,16 +693,16 @@ files.forEach((file) => { })
     scripts in the text:
   </p>
 
-  <pre><code class="language-js">
+  <pre><code class="language-js multiline">
 let html = fs.readFileSync(file).toString();
 let links = findLinks(html);
   </code></pre>
 
   <p>
-    <code>findLinks</code> will use regex to search the text
+    <code class="inline">findLinks</code> will use regex to search the text
   </p>
 
-  <pre><code class="language-js">
+  <pre><code class="language-js multiline">
 let scripts = html.matchAll(/&lt;script\s+(defer){0}\s*src="([.a-zA-Z0-9-\/]+\.js)"\s*(defer){0}\s*&gt;&lt;\/script&gt;/gm);
 let result = scripts.next();
 
@@ -710,7 +716,7 @@ result = stylesheets.next();
     Finally, the matching file's contents will replace those link and script tags
   </p>
 
-  <pre><code class="language-js">
+  <pre><code class="language-js multiline">
 links.forEach((link) => {
   if (cache[link.file] === undefined) {
     cache[link.file] = link.type === "js" ?
@@ -753,6 +759,6 @@ links.forEach((link) => {
 <script>Prism.languages.rust={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?\*\//,lookbehind:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0}],string:[{pattern:/b?r(#*)"(?:\\.|(?!"\1)[^\\\r\n])*"\1/,greedy:!0},{pattern:/b?"(?:\\.|[^\\\r\n"])*"/,greedy:!0}],char:{pattern:/b?'(?:\\(?:x[0-7][\da-fA-F]|u{(?:[\da-fA-F]_*){1,6}|.)|[^\\\r\n\t'])'/,alias:"string"},"lifetime-annotation":{pattern:/'[^\s>']+/,alias:"symbol"},keyword:/\b(?:abstract|alignof|as|async|await|be|box|break|const|continue|crate|do|dyn|else|enum|extern|false|final|fn|for|if|impl|in|let|loop|match|mod|move|mut|offsetof|once|override|priv|pub|pure|ref|return|sizeof|static|self|Self|struct|super|true|trait|type|typeof|union|unsafe|unsized|use|virtual|where|while|yield)\b/,attribute:{pattern:/#!?\[.+?\]/,greedy:!0,alias:"attr-name"},function:[/\w+(?=\s*\()/,/\w+!(?=\s*\(|\[)/],"macro-rules":{pattern:/\w+!/,alias:"function"},number:/\b(?:0x[\dA-Fa-f](?:_?[\dA-Fa-f])*|0o[0-7](?:_?[0-7])*|0b[01](?:_?[01])*|(?:\d(?:_?\d)*)?\.?\d(?:_?\d)*(?:[Ee][+-]?\d+)?)(?:_?(?:[iu](?:8|16|32|64)?|f32|f64))?\b/,"closure-params":{pattern:/\|[^|]*\|(?=\s*[{-])/,inside:{punctuation:/[|:,]/,operator:/[&*]/}},punctuation:/->|\.\.=|\.{1,3}|::|[{}[\];(),:]/,operator:/[-+*\/%!^]=?|=[=>]?|&[&=]?|\|[|=]?|<<?=?|>>?=?|[@?]/};</script>
 <script>Prism.languages.scala=Prism.languages.extend("java",{keyword:/<-|=>|\b(?:abstract|case|catch|class|def|do|else|extends|final|finally|for|forSome|if|implicit|import|lazy|match|new|null|object|override|package|private|protected|return|sealed|self|super|this|throw|trait|try|type|val|var|while|with|yield)\b/,"triple-quoted-string":{pattern:/"""[\s\S]*?"""/,greedy:!0,alias:"string"},string:{pattern:/("|')(?:\\.|(?!\1)[^\\\r\n])*\1/,greedy:!0},builtin:/\b(?:String|Int|Long|Short|Byte|Boolean|Double|Float|Char|Any|AnyRef|AnyVal|Unit|Nothing)\b/,number:/\b0x[\da-f]*\.?[\da-f]+|(?:\b\d+\.?\d*|\B\.\d+)(?:e\d+)?[dfl]?/i,symbol:/'[^\d\s\\]\w*/}),delete Prism.languages.scala["class-name"],delete Prism.languages.scala.function;</script>
 <script>!function(e){var t=/\b(?:abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|exports|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|module|native|new|null|open|opens|package|private|protected|provides|public|record|requires|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|to|transient|transitive|try|uses|var|void|volatile|while|with|yield)\b/,a=/\b[A-Z](?:\w*[a-z]\w*)?\b/;e.languages.java=e.languages.extend("clike",{"class-name":[a,/\b[A-Z]\w*(?=\s+\w+\s*[;,=())])/],keyword:t,function:[e.languages.clike.function,{pattern:/(\:\:)[a-z_]\w*/,lookbehind:!0}],number:/\b0b[01][01_]*L?\b|\b0x[\da-f_]*\.?[\da-f_p+-]+\b|(?:\b\d[\d_]*\.?[\d_]*|\B\.\d[\d_]*)(?:e[+-]?\d[\d_]*)?[dfl]?/i,operator:{pattern:/(^|[^.])(?:<<=?|>>>?=?|->|--|\+\+|&&|\|\||::|[?:~]|[-+*/%&|^!=<>]=?)/m,lookbehind:!0}}),e.languages.insertBefore("java","string",{"triple-quoted-string":{pattern:/"""[ \t]*[\r\n](?:(?:"|"")?(?:\\.|[^"\\]))*"""/,greedy:!0,alias:"string"}}),e.languages.insertBefore("java","class-name",{annotation:{alias:"punctuation",pattern:/(^|[^.])@\w+/,lookbehind:!0},namespace:{pattern:/(\b(?:exports|import(?:\s+static)?|module|open|opens|package|provides|requires|to|transitive|uses|with)\s+)[a-z]\w*(?:\.[a-z]\w*)+/,lookbehind:!0,inside:{punctuation:/\./}},generics:{pattern:/<(?:[\w\s,.&?]|<(?:[\w\s,.&?]|<(?:[\w\s,.&?]|<[\w\s,.&?]*>)*>)*>)*>/,inside:{"class-name":a,keyword:t,punctuation:/[<>(),.:]/,operator:/[?&|]/}}})}(Prism);</script>
-<script>!function(e){var t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={i:r,l:!1,exports:{}};return e[r].call(n.exports,n,n.exports,o),n.l=!0,n.exports}o.m=e,o.c=t,o.d=function(e,t,r){o.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},o.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.t=function(e,t){if(1&t&&(e=o(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(o.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)o.d(r,n,function(t){return e[t]}.bind(null,n));return r},o.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return o.d(t,"a",t),t},o.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},o.p="",o(o.s=0)}([function(e,t){let o,r="light",n="h1, h2, h3, h4, h5, h6, p, li, span, a, i, .main-content";function c(){"light"===r?(r="dark",document.body.style.backgroundColor="rgb(50, 50, 50)",document.querySelectorAll(n).forEach(e=>{e.closest("code")||e.classList.add("dark")}),localStorage.setItem("theme",r)):(r="light",document.body.style.backgroundColor=o,document.querySelectorAll(n).forEach(e=>{e.closest("code")||e.classList.remove("dark")}),localStorage.setItem("theme",r))}function l(){document.querySelectorAll("header .header-list, .hamburger").forEach(e=>e.classList.toggle("open")),document.querySelectorAll(".main-content, .header-logo").forEach(e=>e.classList.toggle("hidden"))}document.addEventListener("DOMContentLoaded",()=>{o=document.body.style.backgroundColor;let e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;"light"!==localStorage.getItem("theme")&&e&&c(),document.querySelector("#color-scheme").addEventListener("click",c),document.querySelector("#hamburger").addEventListener("click",l)})}]);</script>
+<script>!function(e){var t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={i:r,l:!1,exports:{}};return e[r].call(n.exports,n,n.exports,o),n.l=!0,n.exports}o.m=e,o.c=t,o.d=function(e,t,r){o.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},o.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.t=function(e,t){if(1&t&&(e=o(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(o.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)o.d(r,n,function(t){return e[t]}.bind(null,n));return r},o.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return o.d(t,"a",t),t},o.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},o.p="",o(o.s=0)}([function(e,t){let o,r="light",n="h1, h2, h3, h4, h5, h6, p, li, span, a, i, code, .main-content";function l(){"light"===r?(r="dark",document.body.style.backgroundColor="rgb(50, 50, 50)",document.querySelectorAll(n).forEach(e=>{e.closest("code.multiline")||e.classList.add("dark")}),localStorage.setItem("theme",r)):(r="light",document.body.style.backgroundColor=o,document.querySelectorAll(n).forEach(e=>{e.closest("code.multiline")||e.classList.remove("dark")}),localStorage.setItem("theme",r))}function c(){document.querySelectorAll("header .header-list, .hamburger").forEach(e=>e.classList.toggle("open")),document.querySelectorAll(".main-content, .header-logo").forEach(e=>e.classList.toggle("hidden"))}document.addEventListener("DOMContentLoaded",()=>{o=document.body.style.backgroundColor;let e=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;"light"!==localStorage.getItem("theme")&&e&&l(),document.querySelector("#color-scheme").addEventListener("click",l),document.querySelector("#hamburger").addEventListener("click",c)})}]);</script>
 </body>
 </html>

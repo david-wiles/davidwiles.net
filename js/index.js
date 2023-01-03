@@ -1,5 +1,5 @@
 let theme = 'light';
-let selectors = "h1, h2, h3, h4, h5, h6, p, li, span, a, i, .main-content";
+let selectors = "h1, h2, h3, h4, h5, h6, p, li, span, a, i, code, .main-content";
 let originalBgColor;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,7 +21,7 @@ function toggleTheme() {
     document.body.style.backgroundColor = 'rgb(50, 50, 50)'
     document.querySelectorAll(selectors)
       .forEach((el) => {
-        if (!el.closest("code")) {
+        if (!el.closest("code.multiline")) {
           el.classList.add("dark")
         }
       });
@@ -31,7 +31,7 @@ function toggleTheme() {
     document.body.style.backgroundColor = originalBgColor;
     document.querySelectorAll(selectors)
       .forEach((el) => {
-        if (!el.closest("code")) {
+        if (!el.closest("code.multiline")) {
           el.classList.remove("dark")
         }
       });

@@ -445,6 +445,12 @@ ul.no-bullet li {
     margin-top: 10px;
     margin-left: 10px;
     background-color: yellow; }
+  .main-content code.inline {
+    font-size: 14px;
+    padding: 2px 5px;
+    background-color: #f0f0f0; }
+    .main-content code.inline.dark {
+      background-color: #0f0f0f; }
 
 /* Colors */
 /* Fonts */
