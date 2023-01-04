@@ -14,7 +14,11 @@
 
     &.list {
         display: grid;
-        grid-template-columns: 1fr MIN(100ch, 100%) 1fr;
+        grid-template-columns: 1fr MIN(50ch, 100%) 1fr;
+
+        ul {
+            padding: 0;
+        }
     }
 
     > * {

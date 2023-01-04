@@ -416,7 +416,9 @@ ul.no-bullet li {
     grid-template-columns: 1fr MIN(66ch, 100%) 1fr; }
   .main-content.list {
     display: grid;
-    grid-template-columns: 1fr MIN(100ch, 100%) 1fr; }
+    grid-template-columns: 1fr MIN(50ch, 100%) 1fr; }
+    .main-content.list ul {
+      padding: 0; }
   .main-content > * {
     grid-column: 2;
     margin: 15px 0; }
@@ -558,6 +560,11 @@ hr {
                 <span>Coffee</span>
             </a>
         </li>
+        <li class="header-item">
+            <a href="/howto/list.html">
+                <span>HowTo</span>
+            </a>
+        </li>
         <li id="color-scheme" class="header-item">
         <span class="dark-mode-btn">
             <i class="gg-moon"></i>
@@ -581,8 +588,8 @@ hr {
     cello, golfing, or spoiling my cat, Sheba.
   </p>
   <p>
-    Things you'll find on this website are interesting tech I'm learning about, projects I've been working on, and
-    reviews of my newest coffee gadgets. Hopefully you find some of it interesting!
+    Things you'll find on this website are interesting tech I'm learning about, projects I've been working on, reviews
+    of my newest coffee gadgets, and short examples of common coding problems. Hopefully you find some of it interesting!
   </p>
 </div>
 

@@ -416,7 +416,9 @@ ul.no-bullet li {
     grid-template-columns: 1fr MIN(66ch, 100%) 1fr; }
   .main-content.list {
     display: grid;
-    grid-template-columns: 1fr MIN(100ch, 100%) 1fr; }
+    grid-template-columns: 1fr MIN(50ch, 100%) 1fr; }
+    .main-content.list ul {
+      padding: 0; }
   .main-content > * {
     grid-column: 2;
     margin: 15px 0; }
@@ -558,6 +560,11 @@ hr {
         <li class="header-item">
             <a href="/coffee/list.html">
                 <span>Coffee</span>
+            </a>
+        </li>
+        <li class="header-item">
+            <a href="/howto/list.html">
+                <span>HowTo</span>
             </a>
         </li>
         <li id="color-scheme" class="header-item">
