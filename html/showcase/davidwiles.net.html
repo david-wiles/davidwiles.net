@@ -16,23 +16,25 @@
     This website was created without the use of a static site generator or other tools that work "out-of-the-box". This
     is partly due to my desire to create something new, but mostly because I didn't want to learn a new framework just
     to create a website. I wanted to create a website that was <strong>fast</strong>, <strong>cheap</strong>,
-    and<strong>easy to maintain</strong>. I use <code class="inline">yarn</code> for project management and <code class="inline">webpack</code> to
+    and <strong>easy to maintain</strong>. I use <code class="inline">yarn</code> for project management and <code
+    class="inline">webpack</code> to
     process JavaScript to make maintenance and reproducibility a bit simpler.
   </p>
 
   <p>
-    This website is just HTML, which makes it as fast as possible given the circumstances. My <a
+    This website is just HTML, which makes it as fast as possible. My <a
     href="/index.html"><span>index.html</span></a> loads a total of 80.48kB over 4 requests (the html, the fonts, and
-    the favicon). If you already have the fonts and favicon cached by your browser, the page load will be 4.39kB! I
-    limit the number of requests per page load as much as possible by inlining all JS and CSS, which I talk about later.
+    the favicon). If you already have the fonts and favicon cached by your browser, the page load will only be 4.39kB! I
+    am able to limit the number of requests per page load by inlining all JS and CSS.
   </p>
 
   <p>
-    I host <strong>everything</strong> on my site from my site, no CDN's used at all. This does make it a bit slower
-    since it is all hosted from a free static site on <a href="https://render.com">Render</a>, but this does ensure
+    I host <strong>everything</strong> on my site from my site, no CDNs used at all. This makes it a bit slower
+    since it is all hosted from a free-tier static site on <a href="https://render.com">Render</a>, but it ensures
     complete privacy for you. Loading <a href="/index.html">index.html</a> for me with a private window in Firefox takes
-    about 1.33s: 810ms for <code class="inline">DOMContentLoaded</code> to fire, and ~0.5s to load the fonts and favicon. A cached page
-    load will be 419ms: 107ms for <code class="inline">DOMContentLoaded</code> and ~300ms for the rest. Not crazy, but not bad for a
+    about 1.33s: 810ms for <code class="inline">DOMContentLoaded</code> to fire and ~0.5s to load the fonts and favicon.
+    A cached page
+    load will be 419ms: 107ms for <code class="inline">DOMContentLoaded</code> and ~300ms for the rest; not bad for a
     website hosted for free.
   </p>
 
@@ -50,8 +52,8 @@
       over CSS.
     </li>
     <li>
-      JavaScript: 100% Vanilla, no frameworks. One library is used for code highlighting (Prism), but only on pages
-      which have code examples. Webpack to minify the JS.
+      JavaScript: The JS is 100% Vanilla (i.e. no frameworks) and minified with Webpack. One library is used for code
+      highlighting (Prism), but only on pages which have code examples.
     </li>
   </ul>
 
@@ -76,8 +78,21 @@
   <p>
     These features are just enough to minimize duplicated code while still making it as easy as writing pure HTML. You
     can find the source code for the project at <a href="https://github.com/david-wiles/templater">github.com/david-wiles/templater</a>.
-    I currently use this template engine with a short bash script that walks through the <code class="inline">html</code> directory and
+    I currently use this template engine with a short bash script that walks through the <code
+    class="inline">html</code> directory and
     builds the HTML files.
+  </p>
+
+  <h2>
+    SCSS to CSS
+  </h2>
+
+  <p>
+    <code class="inline">node-sass</code> is easily the most heavyweight dependency of this project, but I do think that
+    it is necessary if only for the benefit of maintainability. This adds variables, macros, modules, and selector
+    nesting to CSS. Making a change to a nested selector in CSS is a nightmare, but in SCSS it can be a single-line
+    change. Although there is talk of updating the CSS standard, SCSS probably won't be going away due to how <a
+    href="https://news.ycombinator.com/item?id=32248419">CSS parsing works</a>.
   </p>
 
   <h2>
@@ -91,27 +106,16 @@
   </p>
 
   <h2>
-    SCSS to CSS
-  </h2>
-
-  <p>
-    <code class="inline">node-sass</code> is easily the most heavyweight dependency of this project, but I do think that it is
-    necessary if only for the benefit of maintainability. This adds variables, macros, modules, and selector nesting to
-    CSS. Making a change to a nested selector in CSS is a nightmare, but in SCSS it can be a single-line change.
-    Although there is talk of updating the CSS standard, SCSS probably won't be going away due to the way that <a
-    href="https://news.ycombinator.com/item?id=32248419">CSS parsing works</a>.
-  </p>
-
-  <h2>
     Script and StyleSheet Inlining
   </h2>
 
   <p>
-    CSS and JS inlining is somewhat of a "secret sauce" to get sites to load faster. Replacing &lt;link&gt; and &lt;script&gt;tags
+    CSS and JS inlining is somewhat of a "secret sauce" to get sites to load faster. Replacing &lt;link&gt; and &lt;script&gt; tags
     with the actual source for those links prevents the browser from needing to make extra HTTP requests and lets the
-    browser's parser continue through the page without needing to stop. It is relatively easy to add this to a project,
-    too. I have a script, inline.js, in my project which does this in a separate step during my <code class="inline">yarn run
-    build:prod</code>compilation.
+    browser's parser continue through the page without needing to stop. It is relatively easy to add this to a project.
+    I have a script, inline.js, in my project which does this in a separate step during my <code class="inline">yarn
+    run
+    build:prod</code> compilation.
   </p>
 
   <p>
@@ -156,8 +160,8 @@ result = stylesheets.next();
 links.forEach((link) => {
   if (cache[link.file] === undefined) {
     cache[link.file] = link.type === "js" ?
-      "<script>" + fs.readFileSync(base + link.file).toString() + "</script>" :
-      "<style>" + fs.readFileSync(base + link.file).toString() + "</style>";
+      "&lt;script&gt;" + fs.readFileSync(base + link.file).toString() + "&lt;/script&gt;" :
+      "&lt;style&gt;" + fs.readFileSync(base + link.file).toString() + "&lt;/style&gt;";
   }
   html = html.replace(link.tag, function () { return cache[link.file]; });
 });
