@@ -741,7 +741,7 @@ fn derive_key_from_pass(pass: String, salt: &[u8]) -&gt; [u8; 32] {
     In the <code class="inline">Aes256GcmEngine</code>, <code class="inline">encrypt_bytes</code> provides the implementation of encryption. First,
     we must copy the current nonce value from the nonce sequence to use later. We can then create a new <code class="inline">SealingKey</code> with
     the engine's derived key and nonce sequence. Next, we copy the payload into a slice owned by the function so it
-    can be modified, and seal the new slice in-place by overwriting the bytes. Our new ciphertext is encrypted, and we
+    can be modified and seal the new slice in-place by overwriting the bytes. Our new ciphertext is encrypted, and we
     append the copied nonce to the beginning of the ciphertext to enable decryption. A nonce is unique for each
     encryption, so it is safe to send in plaintext. This nonce is useless without the sealing key and would not help
     an attacker as long as every nonce is unique.
@@ -750,8 +750,8 @@ fn derive_key_from_pass(pass: String, salt: &[u8]) -&gt; [u8; 32] {
   <p>
     Decryption is implemented in a similar way in <code class="inline">decrypt_bytes</code>. First, the nonce is split from the
     ciphertext at a fixed index since the nonce will always be 12 bytes for AES-GCM encryption. Then, an <code class="inline">OpeningKey</code>
-    is created using the engine's derived key, along with the nonce from the ciphertext. Finally, we copy the bytes to
-    an owned slice so we can modify them in-place, and overwrite the bytes with the plaintext bytes.
+    is created using the engine's derived key along with the nonce from the ciphertext. Finally, we copy the bytes to
+    an owned slice so we can modify them in-place and overwrite the bytes with the plaintext bytes.
   </p>
 
   <p>
