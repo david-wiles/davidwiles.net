@@ -16,12 +16,10 @@
     "build:prod": "rm -rf www && cp -R assets/ www/ && yarn run build:html && yarn run build:scss && yarn run build:js && node inline.js www",
     "serve": "http-server www"
   },
-  "dependencies": {
-    "node-sass": "^4.14.1"
-  },
   "devDependencies": {
     "http-server": "^14.1.0",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "node-sass": "^4.14.1"
   }
 }
