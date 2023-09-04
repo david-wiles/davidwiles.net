@@ -407,8 +407,8 @@ ul.no-bullet li {
   .main-content.list {
     display: grid;
     grid-template-columns: 1fr MIN(50ch, 100%) 1fr; }
-    .main-content.list ul {
-      padding: 0; }
+  .main-content ul.left-justified {
+    padding: 0; }
   .main-content > * {
     grid-column: 2;
     margin: 15px 0; }

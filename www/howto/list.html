@@ -417,8 +417,8 @@ ul.no-bullet li {
   .main-content.list {
     display: grid;
     grid-template-columns: 1fr MIN(50ch, 100%) 1fr; }
-    .main-content.list ul {
-      padding: 0; }
+  .main-content ul.left-justified {
+    padding: 0; }
   .main-content > * {
     grid-column: 2;
     margin: 15px 0; }
@@ -583,7 +583,7 @@ hr {
     Short and to-the-point coding examples.
   </p>
 
-  <ul class="no-bullet">
+  <ul class="no-bullet left-justified">
     <!-- rust-ring-aead.html -->
     <li class="v-space">
       <div>
