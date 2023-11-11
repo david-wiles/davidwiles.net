@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {{template "../templates/resource.html"}}
+  {{template "../templates/prism/css.html"}}
+</head>
+<body>
+{{template "../templates/header.html"}}
+
+<main class="main-content article">
+  <h1>{{ "title" }}</h1>
+
+  <small>{{ "updated" }}</small>
+
+  <p>
+    Scala is a functional programming language which can generate JVM bytecode and interop with Java and any other
+    language which is able to output jarfiles. The language has a high barrier to entry to due to it's unique build
+    system and Scala programmer's propensity to use some of the language's more advanced features. However, it's
+    actually pretty simple to get started with a development environment. You will need two dependencies installed:
+  </p>
+
+  <ol>
+    <li>
+      Java
+    </li>
+    <li>
+      sbt
+    </li>
+  </ol>
+
+  <p>
+    The "compilcated build system" mentioned earlier is called SBT (simple build tool/Scala build tool). You can get
+    your own sbt by installing <code class="inline">coursier</code>, which will set up your system with <code class="inline">sbt</code>,
+    <code class="inline">scala</code> (the Scala REPL), Java, and some other goodies which can make developing and running Scala code
+    more ergonomic.
+  </p>
+
+  <p>
+    Many developers who work on the JVM (including myself) would recommend using a package manager to manage your
+    installed Java versions. I use <a href="https://sdkman.io/">sdkman</a> to do this. You you're familiar with
+    <a href="https://github.com/nvm-sh/nvm">nvm</a>, then you will be able to get used to sdkman quite quickly.
+  </p>
+
+  <p>
+    Once you have <code class="inline">java</code> and <code class="inline">sbt</code> on your path, you can start writing Scala! Clone a Scala
+    project, run <code class="inline">sbt</code>, and <em>voila</em>! You're all ready to go. Once in the sbt shell, you can use the
+    build system to compile, test, and run your code. Although you can also run all these commands from your shell as
+    subcommands to <code class="inline">sbt</code>, such as <code class="inline">sbt compile</code>, it is much quicker to use the sbt shell since
+    the project's configuration is already loaded.
+  </p>
+
+  <ul>
+    <li>
+      <code class="inline">reload</code>: load any changes to your project's configuration, i.e. adding new dependencies or compile options
+    </li>
+    <li>
+      <code class="inline">compile</code>: compile your project
+    </li>
+    <li>
+      <code class="inline">test</code>: run all of your project's tests
+    </li>
+    <li>
+      <code class="inline">run</code>: start your project by running the <code class="inline">main</code> function
+    </li>
+    <li>
+      <code class="inline">testOnly</code>: only test an individual file
+    </li>
+  </ul>
+
+  <p>
+    If your project has multiple modules, you can select which one you want to work on by using
+    <code class="inline">project &lt;project name&gt;</code> or by using <code class="inline">&lt;project name&gt;/&lt;command&gt;</code>.
+  </p>
+
+  <p>
+    One nice feature about sbt is that it will automatically download any dependencies you need. For example, if you
+    want to use a different scala version, you can just update the scala version in your build.sbt file and sbt will
+    download the new compiler and standard library for you. This is also true for any other dependencies you add to
+    your project.
+  </p>
+
+  <h2>
+    Hello, World!
+  </h2>
+
+  <p>
+    The example below shows how to setup a "Hello, World!" project in Scala. This project will be a single Scala source
+    file, along with a single build.sbt source.
+  </p>
+
+  <pre class="full-bleed"><code class="language-scala multiline">
+// src/main/scala/net/davidwiles/HelloWorld.scala
+@main def main(): Unit = {
+  println("Hello, World!")
+}
+  </code></pre>
+
+  <pre class="full-bleed"><code class="language-scala multiline">
+// build.sbt
+lazy val root = (project in file("."))
+  .settings(
+    name := "hello-world",
+    organization := "net.davidwiles",
+    version := "0.1.0",
+    scalaVersion := "3.3.1",
+  )
+  </code></pre>
+
+  <pre class="full-bleed"><code class="language-scala multiline">
+// project/build.properties
+sbt.version = 1.9.6
+  </code></pre>
+
+  <pre class="full-bleed"><code class="language-c multiline">
+$ sbt
+[info] welcome to sbt 1.9.6 (Oracle Corporation Java 17.0.1)
+[info] loading global plugins from
+[info] loading project definition from
+[info] loading settings for project hello-world from build.sbt ...
+[info] set current project to root
+[info] sbt server started at
+[info] set current project to hello-world (in build file:/home/david/Projects/hello-world/)
+[info] started sbt server
+sbt:root&gt; run
+[info] running net.davidwiles.main
+Hello, World!
+[success] Total time: 5 s, completed Nov 10, 2023, 5:58:47PM
+  </code></pre>
+</main>
+
+{{template "../templates/footer.html"}}
+{{template "../templates/prism/js.html"}}
+<script src="/static/js/index.js"></script>
+</body>
+</html>

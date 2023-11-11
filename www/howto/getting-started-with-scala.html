@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Encryption and Decryption Using Rust's Ring Crate</title>
+<title>Getting Started with Scala</title>
 <link rel="prefetch" href="/CrimsonText-Italic.woff2" as="font" type="font/woff2"/>
 <link rel="prefetch" href="/CrimsonText-Regular.woff2" as="font" type="font/woff2"/>
 <link rel="prefetch" href="/CrimsonText-SemiBold.woff2" as="font" type="font/woff2"/>
@@ -579,186 +579,124 @@ hr {
 </header>
 
 <main class="main-content article">
-  <h1>Encryption and Decryption Using Rust's Ring Crate</h1>
+  <h1>Getting Started with Scala</h1>
 
-  <small>January 15th, 2023</small>
+  <small>November 10, 2023</small>
 
   <p>
-    Rust does not provide encryption methods in its standard library, so cryptographic functionality must be included
-    with external dependencies. The <code class="inline">ring</code> crate is probably the most popular and well-tested of the
-    available
-    crates on <a href="https://crates.io/">crates.io</a>. Unfortunately, this library is much more low-level than many
-    developers may be familiar with. This article includes a code sample and explanation of how to use this crate
-    effectively.
+    Scala is a functional programming language which can generate JVM bytecode and interop with Java and any other
+    language which is able to output jarfiles. The language has a high barrier to entry to due to it's unique build
+    system and Scala programmer's propensity to use some of the language's more advanced features. However, it's
+    actually pretty simple to get started with a development environment. You will need two dependencies installed:
   </p>
 
-  <pre class="full-bleed"><code class="language-rust multiline">
-/// Aes256GcmEngine is a high-level encryption engine. Once created, it
-/// can encrypt and decrypt slices of bytes, using a single parameter to
-/// `encrypt_bytes` or `decrypt_bytes`, providing a conceptually simple
-/// model of symmetric encryption.
-///
-/// An Aes256GcmEngine must be initialized with a plaintext password and
-/// salt byte slice. The encryption key passed to the SealingKey and
-/// OpeningKey is derived from the password using PBKDF2_HMAC_SHA256, in
-/// `derive_key_from_pass`. `new` may panic under catastrophic
-/// circumstances, namely if 100000 is not a valid u32 or if the system
-/// is unable to fill bytes with random values.
-///
-/// ```
-/// use rust_ring_aead::Aes256GcmEngine;
-/// let engine = Aes256GcmEngine::new(String::from("my_password"), &[1u8, 2, 3, 4, 5, 6]);
-///
-/// let payload = [1u8, 2, 3];
-/// let encrypted = engine.encrypt_bytes(payload.as_slice()).unwrap();
-///
-/// assert_eq!(payload.as_slice(), engine.decrypt_bytes(encrypted.as_slice()).unwrap());
-/// ```
-pub struct Aes256GcmEngine {
-    key: [u8; 32],
-    counter: InitializedNonceSequence,
-}
+  <ol>
+    <li>
+      Java
+    </li>
+    <li>
+      sbt
+    </li>
+  </ol>
 
-impl Aes256GcmEngine {
-    pub fn new(pass: String, salt: &[u8]) -&gt; Self {
-        Self {
-            key: derive_key_from_pass(pass, salt),
-            counter: InitializedNonceSequence::new(new_iv().unwrap()),
-        }
-    }
+  <p>
+    The "compilcated build system" mentioned earlier is called SBT (simple build tool/Scala build tool). You can get
+    your own sbt by installing <code class="inline">coursier</code>, which will set up your system with <code class="inline">sbt</code>,
+    <code class="inline">scala</code> (the Scala REPL), Java, and some other goodies which can make developing and running Scala code
+    more ergonomic.
+  </p>
 
-    pub fn encrypt_bytes(&self, payload: &[u8]) -&gt; Result&lt;Vec&lt;u8&gt;, ring::error::Unspecified&gt; {
-        let nonce_bytes = self.counter.current();
+  <p>
+    Many developers who work on the JVM (including myself) would recommend using a package manager to manage your
+    installed Java versions. I use <a href="https://sdkman.io/">sdkman</a> to do this. You you're familiar with
+    <a href="https://github.com/nvm-sh/nvm">nvm</a>, then you will be able to get used to sdkman quite quickly.
+  </p>
 
-        let mut sealing_key = SealingKey::new(UnboundKey::new(&AES_256_GCM, &self.key)?, self.counter);
-        let mut raw = payload.to_owned();
-        sealing_key.seal_in_place_append_tag(Aad::empty(), &mut raw)?;
+  <p>
+    Once you have <code class="inline">java</code> and <code class="inline">sbt</code> on your path, you can start writing Scala! Clone a Scala
+    project, run <code class="inline">sbt</code>, and <em>voila</em>! You're all ready to go. Once in the sbt shell, you can use the
+    build system to compile, test, and run your code. Although you can also run all these commands from your shell as
+    subcommands to <code class="inline">sbt</code>, such as <code class="inline">sbt compile</code>, it is much quicker to use the sbt shell since
+    the project's configuration is already loaded.
+  </p>
 
-        // Append the nonce to the beginning of the encrypted bytes
-        let mut data = nonce_bytes.to_vec();
-        data.append(&mut raw);
+  <ul>
+    <li>
+      <code class="inline">reload</code>: load any changes to your project's configuration, i.e. adding new dependencies or compile options
+    </li>
+    <li>
+      <code class="inline">compile</code>: compile your project
+    </li>
+    <li>
+      <code class="inline">test</code>: run all of your project's tests
+    </li>
+    <li>
+      <code class="inline">run</code>: start your project by running the <code class="inline">main</code> function
+    </li>
+    <li>
+      <code class="inline">testOnly</code>: only test an individual file
+    </li>
+  </ul>
 
-        Ok(data)
-    }
+  <p>
+    If your project has multiple modules, you can select which one you want to work on by using
+    <code class="inline">project &lt;project name&gt;</code> or by using <code class="inline">&lt;project name&gt;/&lt;command&gt;</code>.
+  </p>
 
-    pub fn decrypt_bytes(&self, bytes: &[u8]) -&gt; Result&lt;Vec&lt;u8&gt;, ring::error::Unspecified&gt; {
-        // Split the incoming bytes at the nonce length
-        let (nonce_bytes, bytes) = bytes.split_at(NONCE_LEN);
+  <p>
+    One nice feature about sbt is that it will automatically download any dependencies you need. For example, if you
+    want to use a different scala version, you can just update the scala version in your build.sbt file and sbt will
+    download the new compiler and standard library for you. This is also true for any other dependencies you add to
+    your project.
+  </p>
 
-        let mut opening_key = OpeningKey::new(
-            UnboundKey::new(&AES_256_GCM, &self.key)?,
-            InitializedNonceSequence::new(nonce_bytes.try_into()?),
-        );
+  <h2>
+    Hello, World!
+  </h2>
 
-        let mut raw = bytes.to_owned();
-        let plaintext = opening_key.open_in_place(Aad::empty(), &mut raw)?;
+  <p>
+    The example below shows how to setup a "Hello, World!" project in Scala. This project will be a single Scala source
+    file, along with a single build.sbt source.
+  </p>
 
-        Ok(plaintext.to_owned())
-    }
-}
-
-/// InitializedNonceSequence represents a NonceSequence initialized with
-/// a random sequence of 12 bytes. These bytes are interpreted as a u128
-/// for quick advancement of the counter.
-///
-/// Allow for copy and clone of this counter to pass to each sealing key.
-/// Normally, we would not want to copy a Nonce sequence, since this
-/// would lead to duplication of nonces and therefore compromise the
-/// security of the encryption. However, here we only copy the nonce
-/// sequence so we are able to append the nonce to the resulting
-/// ciphertext. Nonces are safe to pass in clear text since they are
-/// unique for each invocation, and we do so here so we can decrypt the
-/// ciphertext without needing to internally track the nonces used.
-#[derive(Copy, Clone)]
-struct InitializedNonceSequence(u128);
-
-impl InitializedNonceSequence {
-    fn new(iv: [u8; NONCE_LEN]) -&gt; Self {
-        let mut bytes = [0u8; 16];
-        iv.into_iter().enumerate().for_each(|(i, b)| bytes[i + 4] = b);
-        Self(u128::from_be_bytes(bytes))
-    }
-
-    // Gets the current nonce so it can be added to ciphertext. This will unwrap the
-    // result of `try_into`, which will only fail if the nonce is an invalid u128.
-    // This *should* never happen, since [u8; 12] will always be less than a u128
-    fn current(&self) -&gt; [u8; 12] {
-        self.0.to_be_bytes()[4..].try_into().unwrap()
-    }
-}
-
-/// Implement a NonceSequence for the InitializedNonce. Each time the sequence
-/// is advanced, the current value of the counter is returned, and the counter
-/// is incremented by one, mod 2^96. This ensures that any InitializedNonceSequence
-/// sequences can use the nonce obtained from ciphertext.
-impl NonceSequence for InitializedNonceSequence {
-    fn advance(&mut self) -&gt; Result&lt;Nonce, ring::error::Unspecified&gt; {
-        // Use the current value of the counter as the nonce
-        let nonce = Nonce::try_assume_unique_for_key(&self.current())?;
-        // Increase the counter for the next invocation.
-        // 79228162514264337593543950336 = 2^96, the total number of possible nonces
-        self.0 = (self.0 + 1) % 79228162514264337593543950336u128;
-        Ok(nonce)
-    }
-}
-
-// Create a new random initialization vector, or counter, to use in a NonceSequence
-fn new_iv() -&gt; Result&lt;[u8; NONCE_LEN], ring::error::Unspecified&gt; {
-    let mut nonce_buf = [0u8; NONCE_LEN];
-    SystemRandom::new().fill(&mut nonce_buf)?;
-    Ok(nonce_buf)
-}
-
-fn derive_key_from_pass(pass: String, salt: &[u8]) -&gt; [u8; 32] {
-    // Byte buffer to store derived bytes
-    let mut key = [0u8; 32];
-    // Derive the key and store in `key`
-    derive(PBKDF2_HMAC_SHA256, NonZeroU32::new(100000u32).unwrap(), salt, &pass.as_bytes(), &mut key);
-
-    key
+  <pre class="full-bleed"><code class="language-scala multiline">
+// src/main/scala/net/davidwiles/HelloWorld.scala
+@main def main(): Unit = {
+  println("Hello, World!")
 }
   </code></pre>
 
-  <p>
-    AEAD, or 'Authenticated Encryption with Associated Data', is a <a
-    href="https://en.wikipedia.org/wiki/Authenticated_encryption">family of cryptographic algorithms</a> including <a
-    href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a>. These algorithms can encrypt data and
-    additionally include data that is unencrypted, but can be verified against tampering. The specific algorithm
-    used by this code sample is <a
-    href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Galois/counter_(GCM)">AES-256-GCM</a>.
-  </p>
+  <pre class="full-bleed"><code class="language-scala multiline">
+// build.sbt
+lazy val root = (project in file("."))
+  .settings(
+    name := "hello-world",
+    organization := "net.davidwiles",
+    version := "0.1.0",
+    scalaVersion := "3.3.1",
+  )
+  </code></pre>
 
-  <p>
-    The <code class="inline">Aes256GcmEngine</code> provides a high-level interface to encrypt and decrypt data. This struct must be
-    initialized with a plaintext password along with salt bytes. We add additional entropy to the plaintext password by
-    using <a href="https://en.wikipedia.org/wiki/PBKDF2">PBKDF2</a> key derivation. During construction of this struct,
-    a random initialization vector is created to start the nonce sequence. Since a unique nonce must be used for
-    each encryption, the <code class="inline">advance</code> function will increase the random value by one each time it is used. This
-    could also be implemented by generating a new random value each time.
-  </p>
+  <pre class="full-bleed"><code class="language-scala multiline">
+// project/build.properties
+sbt.version = 1.9.6
+  </code></pre>
 
-  <p>
-    In the <code class="inline">Aes256GcmEngine</code>, <code class="inline">encrypt_bytes</code> provides the implementation of encryption. First,
-    we must copy the current nonce value from the nonce sequence to use later. We can then create a new <code class="inline">SealingKey</code> with
-    the engine's derived key and nonce sequence. Next, we copy the payload into a slice owned by the function so it
-    can be modified and seal the new slice in-place by overwriting the bytes. Our new ciphertext is encrypted, and we
-    append the copied nonce to the beginning of the ciphertext to enable decryption. A nonce is unique for each
-    encryption, so it is safe to send in plaintext. This nonce is useless without the sealing key and would not help
-    an attacker as long as every nonce is unique.
-  </p>
-
-  <p>
-    Decryption is implemented in a similar way in <code class="inline">decrypt_bytes</code>. First, the nonce is split from the
-    ciphertext at a fixed index since the nonce will always be 12 bytes for AES-GCM encryption. Then, an <code class="inline">OpeningKey</code>
-    is created using the engine's derived key along with the nonce from the ciphertext. Finally, we copy the bytes to
-    an owned slice so we can modify them in-place and overwrite the bytes with the plaintext bytes.
-  </p>
-
-  <p>
-    The full code for this examples can be found here: <a href="https://github.com/david-wiles/rust-ring-aead">github.com/david-wiles/rust-ring-aead</a>.
-    This also includes a REPL to interactively encrypt and decrypt text.
-  </p>
-
+  <pre class="full-bleed"><code class="language-c multiline">
+$ sbt
+[info] welcome to sbt 1.9.6 (Oracle Corporation Java 17.0.1)
+[info] loading global plugins from
+[info] loading project definition from
+[info] loading settings for project hello-world from build.sbt ...
+[info] set current project to root
+[info] sbt server started at
+[info] set current project to hello-world (in build file:/home/david/Projects/hello-world/)
+[info] started sbt server
+sbt:root&gt; run
+[info] running net.davidwiles.main
+Hello, World!
+[success] Total time: 5 s, completed Nov 10, 2023, 5:58:47PM
+  </code></pre>
 </main>
 
 <footer>
