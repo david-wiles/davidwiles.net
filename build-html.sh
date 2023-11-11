@@ -7,8 +7,10 @@ for p in $(find html -name '*.html' -not -path 'html/templates/*'); do
 
   mkdir -p $(dirname "${OUTFILE}")
 
-  # Call tmpl for each file and its associated varfile
-  if [ -f "${VARFILE}" ]; then
+  # If the filename is list.html, then set the file's directory as -vd
+  if [ $(basename $p) == "list.html" ]; then
+    tmpl -of ${OUTFILE} -vd $(dirname $p) $p;
+  elif [ -f "${VARFILE}" ]; then
     tmpl -of ${OUTFILE} -vf ${VARFILE} $p;
   else
     tmpl -of ${OUTFILE} $p;
